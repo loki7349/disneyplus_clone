@@ -1,20 +1,50 @@
 import React from 'react'
 import styled from 'styled-components'
 import { auth, provider } from '../firebase'
+import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
+import { selectUserName, selectUserEmail, selectUserPhoto, setUserLoginDetails } from '../features/user/userSlice'
 
 function Header(){
+    const dispatch = useDispatch();
+    const history = useHistory();
+    const username = useSelector(selectUserName)
+    const userPhoto = useSelector(selectUserPhoto)
+
+
     const handleAuth = () => {
         auth.signInWithPopup(provider).then((result) => {
+            setUser(result.user);
             console.log(result);
         }).catch((error) => {
             alert(error.message)
         })
+    }
+
+    const setUser = (user) => {
+        dispatch(
+            setUserLoginDetails({
+                name: user.displlayName,
+                email: user.email,
+                photo: user.photoURL,
+            })
+        )
     }
   return (
     <Nav>
         <Logo>
             <img src="/images/logo.svg" alt='Disney+' />
         </Logo>
+        {
+            !username ? <Login onClick={handleAuth}>Login</Login>: 
+            <>
+            <NavMenu>
+                <a href='/home'>
+                    <img src='/images/home-icon.svg' alt='HOME' />
+                </a>
+            </NavMenu>
+            </>
+        }
         <NavMenu>
             <a href='/home'>
                 <img src='/images/home-icon.svg' alt='Home' />
