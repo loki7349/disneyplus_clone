@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { auth, provider } from '../firebase'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { selectUserName, selectUserEmail, selectUserPhoto, setUserLoginDetails } from '../features/user/userSlice'
+import { selectUserName, selectUserEmail, selectUserPhoto, setUserLoginDetails, setSignOutState } from '../features/user/userSlice'
 
 function Header(){
     const dispatch = useDispatch();
@@ -22,12 +22,19 @@ function Header(){
 
 
     const handleAuth = () => {
+        if(!username){
         auth.signInWithPopup(provider).then((result) => {
             setUser(result.user);
             console.log(result);
         }).catch((error) => {
             alert(error.message)
         })
+        }else if(username){
+            auth.SignOut().then(()=> {
+                dispatch(setSignOutState())
+                history.push('/')
+            }).catch((err) => alert(err.message));
+        }
     }
 
     const setUser = (user) => {
@@ -227,6 +234,15 @@ const SignOut = styled.div`
 
     ${UserImg}{
         border-radius: 50%;
+        width: 100%;
+        height: 100%;
+    }
+
+    %:hover {
+        ${DropDown} {
+            opacity: 1;
+            transition-duration: 1s; 
+        }
     }
 `
 
