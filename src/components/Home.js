@@ -41,15 +41,16 @@ const Home = () => {
 
                 }
             })
-        })
+        
 
         dispatch(setMovies({
             recommend: recommends,
             newDisney: newDisneys,
             original: originals,
             trending: trending,
-        })
+            })
         );
+    })
     }, [userName]);
 
     return (
