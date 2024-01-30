@@ -232,4 +232,5 @@ const Description = styled.div`
   }
 `;
 
+
 export default Detail;
